@@ -180,3 +180,61 @@ button {
   align-items: center;
   gap: 5px;
 }
+
+.page-container {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.new-button {
+  background: #4A148C;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.drinks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.drink-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-tag {
+  color: #4A148C;
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+
+.updates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.update-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.update-content {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+}
+
+.update-date {
+  color: #666;
+  font-size: 0.9em;
+}

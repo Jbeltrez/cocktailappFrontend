@@ -31,6 +31,12 @@ const Dashboard = () => {
       isActive: true
     },
     {
+      title: 'Team Updates',
+      description: 'View and post team announcements',
+      link: '/team-updates',
+      isActive: true
+    },
+    {
       title: 'Sales Report',
       description: 'View sales analytics and trends',
       link: '/sales',
