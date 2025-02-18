@@ -1,28 +1,43 @@
 // src/pages/Register.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
+import { teamService } from '../services/teamService';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [teamId, setTeamId] = useState('');
+  const [teams, setTeams] = useState([]);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const teamsData = await teamService.getAllTeams();
+        setTeams(teamsData);
+      } catch (err) {
+        setError('Failed to load teams');
+      }
+    };
+
+    fetchTeams();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!teamId) {
+      setError('Please select a team');
+      return;
+    }
+
     try {
-      const response = await authService.register(username, password);
-      console.log('Registration response:', response);
-      setSuccess(true);
-      // Wait 2 seconds before redirecting to login
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+      await authService.register(username, password, parseInt(teamId));
+      navigate('/login');
     } catch (err) {
-      console.error('Registration error details:', err);
-      setError(err.message || 'Registration failed. Please try again.');
+      setError('Registration failed. Username might be taken.');
+      console.error('Registration error:', err);
     }
   };
 
@@ -30,7 +45,6 @@ const Register = () => {
     <div>
       <h2>Register for BOOZY</h2>
       {error && <div style={{ color: 'red' }}>{error}</div>}
-      {success && <div style={{ color: 'green' }}>Registration successful! Redirecting to login...</div>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Username</label>
@@ -49,6 +63,21 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+        </div>
+        <div>
+          <label>Select Team</label>
+          <select
+            value={teamId}
+            onChange={(e) => setTeamId(e.target.value)}
+            required
+          >
+            <option value="">Select a team...</option>
+            {teams.map(team => (
+              <option key={team.id} value={team.id}>
+                {team.name}
+              </option>
+            ))}
+          </select>
         </div>
         <button type="submit">Register</button>
       </form>

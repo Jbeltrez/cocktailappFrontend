@@ -17,17 +17,18 @@ export const authService = {
     const data = await response.json();
     localStorage.setItem("token", data.token);
     localStorage.setItem("username", username);
+    localStorage.setItem("teamId", data.teamId);
     return data;
   },
 
-  register: async (username, password) => {
+  register: async (username, password, teamId) => {
     try {
       const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, teamId }),
       });
 
       const data = await response.text();
@@ -47,9 +48,14 @@ export const authService = {
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("teamId");
   },
 
   isAuthenticated: () => {
     return !!localStorage.getItem("token");
+  },
+
+  getTeamId: () => {
+    return localStorage.getItem("teamId");
   },
 };

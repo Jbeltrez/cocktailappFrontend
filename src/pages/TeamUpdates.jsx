@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import { teamService } from '../services/teamService';
+import { authService } from '../services/authService';
 
 const TeamUpdates = () => {
   const [updates, setUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const teamId = authService.getTeamId();
 
   useEffect(() => {
     const fetchUpdates = async () => {
       try {
-        // Assuming team ID 1 for now - you might want to make this dynamic
-        const data = await teamService.getTeamUpdates(1);
+        const data = await teamService.getTeamUpdates(teamId);
         setUpdates(data);
         setLoading(false);
       } catch (err) {
@@ -20,8 +21,25 @@ const TeamUpdates = () => {
       }
     };
 
-    fetchUpdates();
-  }, []);
+    if (teamId) {
+      fetchUpdates();
+    } else {
+      setError('No team associated with this account');
+      setLoading(false);
+    }
+  }, [teamId]);
+
+  const handleNewUpdate = async (content) => {
+    try {
+      const newUpdate = await teamService.createTeamUpdate({
+        content,
+        teamId: parseInt(teamId)
+      });
+      setUpdates([newUpdate, ...updates]);
+    } catch (err) {
+      setError('Failed to create update');
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
