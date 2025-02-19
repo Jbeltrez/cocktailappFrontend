@@ -123,9 +123,12 @@ const Menus = () => {
             gap: '2rem' 
           }}>
             <AddDrinkCard onClick={() => setIsDrinkModalOpen(true)} />
-            {filteredDrinks.map(drink => (
-              <DrinkCard key={drink.id} drink={drink} />
-            ))}
+            {filteredDrinks.map(drink => {
+              console.log('Drink being passed to DrinkCard:', drink);
+              return (
+                <DrinkCard key={drink.id} drink={drink} />
+              );
+            })}
           </div>
         </div>
       ) : (

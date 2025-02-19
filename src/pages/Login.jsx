@@ -1,6 +1,6 @@
 // src/pages/Login.jsx
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/authService';
 
 const Login = () => {
@@ -29,31 +29,39 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login to BOOZY</h2>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      {success && <div style={{ color: 'green' }}>Login successful! Redirecting...</div>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <div className="auth-container">
+      <img src="/boozy-logo.png" alt="Boozy Logo" className="auth-logo" />
+      <div className="auth-card">
+        <h2>Login to BOOZY</h2>
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">Login successful! Redirecting...</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="auth-input"
+            />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="auth-input"
+            />
+          </div>
+          <button type="submit" className="auth-button">Login</button>
+        </form>
+        <p className="auth-footer">
+          Don't have an account? <Link to="/register" className="auth-link">Register here</Link>
+        </p>
+      </div>
     </div>
   );
 };

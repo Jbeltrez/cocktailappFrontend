@@ -1,6 +1,6 @@
 // src/pages/Register.jsx
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { teamService } from '../services/teamService';
 
@@ -45,45 +45,54 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h2>Register for BOOZY</h2>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Select Team</label>
-          <select
-            value={teamId}
-            onChange={(e) => setTeamId(e.target.value)}
-            required
-          >
-            <option value="">Select a team...</option>
-            {teams.map(team => (
-              <option key={team.id} value={team.id}>
-                {team.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button type="submit">Register</button>
-      </form>
+    <div className="auth-container">
+      <img src="/boozy-logo.png" alt="Boozy Logo" className="auth-logo" />
+      <div className="auth-card">
+        <h2>Register for BOOZY</h2>
+        {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="auth-input"
+            />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="auth-input"
+            />
+          </div>
+          <div className="form-group">
+            <label>Select Team</label>
+            <select
+              value={teamId}
+              onChange={(e) => setTeamId(e.target.value)}
+              required
+              className="auth-input"
+            >
+              <option value="">Select a team...</option>
+              {teams.map(team => (
+                <option key={team.id} value={team.id}>
+                  {team.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="auth-button">Register</button>
+        </form>
+        <p className="auth-footer">
+          Already have an account? <Link to="/login" className="auth-link">Login here</Link>
+        </p>
+      </div>
     </div>
   );
 };
