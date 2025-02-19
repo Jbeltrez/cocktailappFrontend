@@ -15,9 +15,12 @@ const Register = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
+        console.log('Fetching teams...'); // Debug log
         const teamsData = await teamService.getAllTeams();
+        console.log('Teams received:', teamsData); // Debug log
         setTeams(teamsData);
       } catch (err) {
+        console.error('Error in fetchTeams:', err); // Debug log
         setError('Failed to load teams');
       }
     };

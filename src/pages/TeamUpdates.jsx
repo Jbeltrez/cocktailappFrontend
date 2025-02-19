@@ -7,6 +7,8 @@ const TeamUpdates = () => {
   const [updates, setUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [newContent, setNewContent] = useState('');
+  const [showForm, setShowForm] = useState(false);
   const teamId = authService.getTeamId();
 
   useEffect(() => {
@@ -29,14 +31,20 @@ const TeamUpdates = () => {
     }
   }, [teamId]);
 
-  const handleNewUpdate = async (content) => {
+  const handleNewUpdate = async (e) => {
+    e.preventDefault();
     try {
       const newUpdate = await teamService.createTeamUpdate({
-        content,
-        teamId: parseInt(teamId)
+        content: newContent,
+        teamId: parseInt(teamId),
+        timestamp: new Date().toISOString()
       });
-      setUpdates([newUpdate, ...updates]);
+      console.log('New update response:', newUpdate);
+      setUpdates(prevUpdates => [newUpdate, ...prevUpdates]);
+      setNewContent('');
+      setShowForm(false);
     } catch (err) {
+      console.error('Error creating update:', err);
       setError('Failed to create update');
     }
   };
@@ -49,13 +57,32 @@ const TeamUpdates = () => {
       <NavBar />
       <div className="page-container">
         <h1>Team Updates</h1>
-        <button className="new-button">+ New Update</button>
+        <button 
+          className="new-button" 
+          onClick={() => setShowForm(true)}
+        >
+          + New Update
+        </button>
+        
+        {showForm && (
+          <form onSubmit={handleNewUpdate}>
+            <textarea
+              value={newContent}
+              onChange={(e) => setNewContent(e.target.value)}
+              placeholder="Enter your update..."
+              required
+            />
+            <button type="submit">Post Update</button>
+            <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
+          </form>
+        )}
+
         <div className="updates-list">
           {updates.map(update => (
             <div key={update.id} className="update-card">
               <p className="update-content">{update.content}</p>
               <p className="update-date">
-                {new Date(update.createdAt).toLocaleDateString()}
+                {update.createdAt ? new Date(update.createdAt).toLocaleDateString() : 'Just now'}
               </p>
             </div>
           ))}

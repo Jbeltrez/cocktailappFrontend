@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const DashboardCard = ({ title, description, link, isActive }) => {
   const cardContent = (
     <div className={`dashboard-card ${!isActive ? 'inactive' : ''}`}>
@@ -8,9 +10,9 @@ const DashboardCard = ({ title, description, link, isActive }) => {
   );
 
   return isActive ? (
-    <a href={link} className="card-link">
+    <Link to={link} className="card-link">
       {cardContent}
-    </a>
+    </Link>
   ) : (
     cardContent
   );
