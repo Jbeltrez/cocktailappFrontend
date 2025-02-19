@@ -3,22 +3,15 @@ import { apiService } from "./apiService";
 export const teamService = {
   getAllTeams: async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/teams", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch teams");
-      }
-
-      const data = await response.json();
-      console.log("Teams fetched:", data); // Debug log
-      return data;
+      const response = await apiService.get("/teams");
+      console.log("Teams API Response:", response);
+      return response;
     } catch (error) {
-      console.error("Error fetching teams:", error);
+      console.error("Error fetching teams:", {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      });
       throw error;
     }
   },

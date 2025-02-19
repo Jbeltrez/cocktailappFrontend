@@ -1,6 +1,6 @@
 // src/pages/Dashboard.jsx
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import { categoryService } from '../services/categoryService';
@@ -8,6 +8,11 @@ import { drinkService } from '../services/drinkService';
 import { menuService } from '../services/menuService';
 import { authService } from '../services/authService';
 import DashboardCard from '../components/DashboardCard';
+import Modal from '../components/Modal';
+import TeamSchedule from '../components/TeamSchedule';
+import Paystubs from '../components/Paystubs';
+import SalesReport from '../components/SalesReport';
+import '../styles/Dashboard.css';
 
 const Dashboard = () => {
   const [categories, setCategories] = useState([]);
@@ -16,6 +21,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [paystubsModalOpen, setPaystubsModalOpen] = useState(false);
+  const [salesModalOpen, setSalesModalOpen] = useState(false);
 
   const dashboardItems = [
     {
@@ -57,6 +65,7 @@ const Dashboard = () => {
   ];
 
   useEffect(() => {
+    console.log('Dashboard component mounted'); // Debug log
     const fetchData = async () => {
       try {
         const [categoriesData, drinksData, menusData] = await Promise.all([
@@ -84,6 +93,8 @@ const Dashboard = () => {
     navigate('/login');
   };
 
+  console.log('Dashboard rendering'); // Debug log
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -94,24 +105,76 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-root">
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="dashboard-container">
-        <img src="/boozy-logo.png" alt="Boozy Logo" className="dashboard-logo" />
-        <h1 className="dashboard-title">Welcome to your BOOZY dashboard</h1>
-        <p className="dashboard-subtitle">Manage your menus and drinks with ease</p>
+        <div className="dashboard-content">
+          <div className="logo-container">
+            <img src="/boozy-logo.png" alt="Boozy Logo" className="dashboard-logo" />
+          </div>
+          <h1>Welcome to your BOOZY dashboard</h1>
+          <p>Manage your menus and drinks with ease</p>
+          
+          <div className="dashboard-grid">
+            <Link to="/menus" className="dashboard-card">
+              <h2>Menus</h2>
+              <p>View and manage all menus</p>
+            </Link>
 
-        <div className="dashboard-grid">
-          {dashboardItems.map((item, index) => (
-            <DashboardCard
-              key={index}
-              title={item.title}
-              description={item.description}
-              link={item.link}
-              isActive={item.isActive}
-            />
-          ))}
+            <Link to="/drinks" className="dashboard-card">
+              <h2>All Drinks</h2>
+              <p>Browse and edit drink recipes</p>
+            </Link>
+
+            <Link to="/team-updates" className="dashboard-card">
+              <h2>Team Updates</h2>
+              <p>View and post team announcements</p>
+            </Link>
+
+            {/* Sales Report Card */}
+            <div className="dashboard-card" onClick={() => setSalesModalOpen(true)}>
+              <h2>Sales Report</h2>
+              <p>View sales analytics and trends</p>
+            </div>
+
+            {/* Paystubs Card */}
+            <div className="dashboard-card" onClick={() => setPaystubsModalOpen(true)}>
+              <h2>Paystubs</h2>
+              <p>View payment history</p>
+            </div>
+
+            {/* Team Schedule Card */}
+            <div className="dashboard-card" onClick={() => setScheduleModalOpen(true)}>
+              <h2>Team Schedule</h2>
+              <p>View and manage staff schedules</p>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <Modal 
+        isOpen={scheduleModalOpen} 
+        onClose={() => setScheduleModalOpen(false)}
+        title="Team Schedule"
+      >
+        <TeamSchedule />
+      </Modal>
+
+      <Modal 
+        isOpen={paystubsModalOpen} 
+        onClose={() => setPaystubsModalOpen(false)}
+        title="Paystubs"
+      >
+        <Paystubs />
+      </Modal>
+
+      <Modal 
+        isOpen={salesModalOpen} 
+        onClose={() => setSalesModalOpen(false)}
+        title="Sales Report"
+      >
+        <SalesReport />
+      </Modal>
     </div>
   );
 };

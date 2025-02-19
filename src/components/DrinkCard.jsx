@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './DrinkCard.module.css';
 import { CATEGORY_PRICES } from '../utils/constants';
+import { getCategoryImage } from '../utils/categoryImages';
 
 const DrinkCard = ({ drink }) => {
   // Add console.log to see what data we're receiving
@@ -16,7 +17,7 @@ const DrinkCard = ({ drink }) => {
     <div className={styles.drinkCard}>
       <div className={styles.imageContainer}>
         <img 
-          src={drink.imageUrl || '/default-drink-image.jpg'} 
+          src={getCategoryImage(drink.category)} 
           alt={drink.name}
           className={styles.image}
         />

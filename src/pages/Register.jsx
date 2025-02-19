@@ -10,18 +10,22 @@ const Register = () => {
   const [teamId, setTeamId] = useState('');
   const [teams, setTeams] = useState([]);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        console.log('Fetching teams...'); // Debug log
+        setIsLoading(true);
+        setError('');
         const teamsData = await teamService.getAllTeams();
-        console.log('Teams received:', teamsData); // Debug log
+        console.log('Teams received:', teamsData);
         setTeams(teamsData);
       } catch (err) {
-        console.error('Error in fetchTeams:', err); // Debug log
-        setError('Failed to load teams');
+        console.error('Error fetching teams:', err);
+        setError('Failed to load teams. Please try again later.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -50,45 +54,49 @@ const Register = () => {
       <div className="auth-card">
         <h2>Register for BOOZY</h2>
         {error && <div className="error-message">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Username</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="auth-input"
-            />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="auth-input"
-            />
-          </div>
-          <div className="form-group">
-            <label>Select Team</label>
-            <select
-              value={teamId}
-              onChange={(e) => setTeamId(e.target.value)}
-              required
-              className="auth-input"
-            >
-              <option value="">Select a team...</option>
-              {teams.map(team => (
-                <option key={team.id} value={team.id}>
-                  {team.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button type="submit" className="auth-button">Register</button>
-        </form>
+        {isLoading ? (
+          <div className="loading-message">Loading teams...</div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Username</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="auth-input"
+              />
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="auth-input"
+              />
+            </div>
+            <div className="form-group">
+              <label>Select Team</label>
+              <select
+                value={teamId}
+                onChange={(e) => setTeamId(e.target.value)}
+                required
+                className="auth-input"
+              >
+                <option value="">Select a team...</option>
+                {teams.map(team => (
+                  <option key={team.id} value={team.id}>
+                    {team.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button type="submit" className="auth-button">Register</button>
+          </form>
+        )}
         <p className="auth-footer">
           Already have an account? <Link to="/login" className="auth-link">Login here</Link>
         </p>
